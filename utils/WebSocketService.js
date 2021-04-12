@@ -10,6 +10,7 @@ export default class WebSocketService {
     this.ws = new WebSocket('ws://localhost:3001');
     this.ws.onopen = () => console.log('OPENED CONNECTION');
     this.ws.onmessage = (event) => this.handleReceiveMessage(event);
+    this.ws.onclose = (event) => console.log('CLOSED CONNECTION');
   }
 
   handleReceiveMessage(event) {
