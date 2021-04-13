@@ -6,7 +6,7 @@ import styles from '../styles/Home.module.css';
 export async function getServerSideProps() {
   let initialNoteValue = '';
   try {
-    const res = await fetch(`http://localhost:3001`);
+    const res = await fetch(`http://b56f1812c858.ngrok.io`);
     const data = await res.json();
     initialNoteValue = data.value;
   } catch (err) {
