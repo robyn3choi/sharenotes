@@ -3,13 +3,18 @@ import { useEffect, useState } from 'react';
 import WebSocketService from '../utils/WebSocketService';
 import styles from '../styles/Home.module.css';
 
-// This gets called on every request
 export async function getServerSideProps() {
-  // Fetch data from external API
-  const res = await fetch(`http://localhost:3001`);
-  const data = await res.json();
+  let initialNoteValue = '';
+  try {
+    const res = await fetch(`http://localhost:3001`);
+    const data = await res.json();
+    initialNoteValue = data.value;
+  } catch (err) {
+    console.error(err);
+  }
+
   // Pass data to the page via props
-  return { props: { initialNoteValue: data.value } };
+  return { props: { initialNoteValue } };
 }
 
 export default function Home({ initialNoteValue }) {
