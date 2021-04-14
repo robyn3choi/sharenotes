@@ -1,40 +1,15 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import WebSocketService from '../utils/WebSocketService';
-import styles from '../styles/Home.module.css';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import styles from 'styles/Home.module.css';
 
-export async function getServerSideProps() {
-  let initialNoteValue = '';
-  try {
-    const res = await fetch(`http://b56f1812c858.ngrok.io`);
+export default function Home() {
+  const router = useRouter();
+
+  async function createNote() {
+    const res = await fetch(`https://${process.env.NEXT_PUBLIC_SERVER_DOMAIN}/create`, { method: 'POST' });
     const data = await res.json();
-    initialNoteValue = data.value;
-  } catch (err) {
-    console.error(err);
-  }
-
-  // Pass data to the page via props
-  return { props: { initialNoteValue } };
-}
-
-export default function Home({ initialNoteValue }) {
-  const [webSocketService, setWebSocketService] = useState();
-  const [noteValue, setNoteValue] = useState(initialNoteValue);
-
-  // WebSocket is undefined when prerendering on server so initialize WebSocketServer after first render
-  useEffect(() => {
-    const wss = new WebSocketService();
-    setWebSocketService(wss);
-    wss.addMessageHandler(updateNote);
-  }, []);
-
-  function updateNote(val) {
-    setNoteValue(val);
-  }
-
-  function handleNoteChange(val) {
-    setNoteValue(val);
-    webSocketService.sendMessage(val);
+    router.push(`/note/${data.noteId}`);
   }
 
   return (
@@ -42,8 +17,9 @@ export default function Home({ initialNoteValue }) {
       <Head>
         <title>Sharenotes</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
       </Head>
-      <textarea className={styles.note} onChange={(e) => handleNoteChange(e.target.value)} value={noteValue}></textarea>
+      <button onClick={createNote}>Create a new note</button>
     </div>
   );
 }
