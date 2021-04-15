@@ -19,7 +19,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
         <link rel="manifest" href="/manifest.json" />
       </Head>
-      <button onClick={createNote}>Create a new note</button>
+      <button className={styles.createButton} onClick={createNote}>
+        Create a new note
+      </button>
     </div>
   );
 }
